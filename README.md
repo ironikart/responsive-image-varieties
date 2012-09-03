@@ -66,7 +66,7 @@ var outputRules = {
 };
 ```
 
-** Tag name **
+**Tag name**
 Change the tag name to search for instead of noscript
 
 ```html
@@ -80,7 +80,7 @@ var outputRules = {
 };
 ```
 
-** Url attribute **
+**Url attribute**
 Change the url attribute we seek to create the image variety
 
 ```html
@@ -95,7 +95,7 @@ var outputRules = {
 };
 ```
 
-** Allowed nodes **
+**Allowed nodes**
 Choose scope this script is allowed to search within for nodes to create image
 varieties.
 
@@ -105,7 +105,7 @@ var outputRules = {
     allowedNodes: 'div#content, div#header' // only tags under these 2 divs will be processed
 };
 ```
-** Remove the original node **
+**Remove the original node**
 You can optionally remove the original node. By default this node is 'noscript' who's contents
 won't be rendered to the dom, but if you wanted to transform <img> tags you could use this to 
 remove the original
@@ -117,20 +117,20 @@ var outputRules = {
 };
 ```
 
-** Respond to browser resize event **
+**Respond to browser resize event**
 By default when the browser is resized this script will re-run itself to find if
 a new variety rule has been met. You can disable this by supplying resize: false
 
-** Force run **
+**Force run**
 Setting force: true will re-write the created element each time the outputter is run
 including on the browser resize event. Leave it to false for best performance.
 
-** Run on instantiation **
+**Run on instantiation**
 If you don't want this to run when the code is instantiated set this to run: false. This
 means you will need to manually call the run() method at the time you choose to evaluate
 the tags.
 
-** Screen width retrieval method **
+**Screen width retrieval method**
 You can supply a custom method to determine the screen width. By default it uses
 jQuery.width() on the window object. If you need to do some custom calculations to
 determine screen width you can supply a custom getWidth() function.
