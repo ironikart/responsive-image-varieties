@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Slide Show Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+    <script src="jasmine/jasmine.js"></script>
+    <script src="jasmine/jasmine-html.js"></script>
+    
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="../jquery.mriv.js"></script>
+    
+    <script type="text/javascript">
+    describe("Matrix Responsive Image Varieties", function() {
+
+        var mockMobile = function() { return 320 };
+        var mockTablet = function() { return 768 };
+        var mockDesktop = function() { return 1600 };
+
+        it("Generates correct variety paths for path variants", function() {
+            var varieties = new MRIV({
+                output: {
+                    'mobile': {
+                        width: 320
+                    }
+                },
+                getWidth: mockMobile
+            });
+            var $tags = $('body').find('img.variety');
+            expect($tags.length).toBe($('noscript').length);
+            expect($($tags.get(0)).attr('src')).toBe('http://localhost/image1.jpg/mobile.jpg');
+            expect($($tags.get(3)).attr('src')).toBe('http://localhost/__data/assets/image/0001/0001/varieties/mobile.jpg');
+            expect(varieties.outputs.length).toBe(5);
+        });
+
+        it("Uses the correct variety name on screen size differences", function() {
+            var varieties = new MRIV({
+                output: {
+                    'mobile': {
+                        width: 320,
+                        outputter: function(elem, url, name, alt) {
+                            expect(name).toBe('mobile');
+                        }
+                    },
+                    'tablet': {
+                        width: [321,768],
+                        outputter: function(elem, url, name, alt) {
+                            expect(name).toBe('tablet');
+                        }
+                    }
+                }
+            });
+
+            expect(varieties.outputs.length).toBe(5);
+            
+            varieties.options.set('getWidth',mockDesktop);
+
+            varieties.options.set('getWidth',mockMobile);
+            varieties.run();
+
+            varieties.options.set('getWidth',mockTablet);
+            varieties.run();
+
+        });
+
+        it("Scopes correctly", function() {
+            var varieties = new MRIV({
+                output: {
+                    'mobile': {
+                        width: 320
+                    }
+                },
+                allowedNodes: "#other-images",
+                getWidth: mockMobile
+            });
+
+            expect(varieties.outputs.length).toBe(1);
+            
+        });
+
+        it("Accepts different source tags", function() {
+            var varieties = new MRIV({
+                output: {
+                    'mobile': {
+                        width: 320
+                    }
+                },
+                tagName: 'img.responsive',
+                urlAttribute: 'src',
+                altAttribute: 'alt',
+                getWidth: mockMobile
+            });
+
+            expect(varieties.outputs.length).toBe(3);
+            
+        });
+    });
+
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var trivialReporter = new jasmine.TrivialReporter();
+
+      jasmineEnv.addReporter(trivialReporter);
+      
+      window.onload = function() {
+        jasmineEnv.execute();
+      };
+
+    })();
+    </script>
+    
+
+  </head>
+
+  <body>
+    <div style="display: none">
+        <div id="images">
+            <noscript data-url="http://localhost/image1.jpg" data-alt="image 1 alt">
+                <img src="http://localhost/image1.jpg" />
+            </noscript>
+            <noscript data-url="http://localhost/image2.jpg" data-alt="image 2 alt">
+                <img src="http://localhost/image2.jpg" />
+            </noscript>
+            <noscript data-url="http://localhost/image3.jpg" data-alt="image 3 alt">
+                <img src="http://localhost/image3.jpg" />
+            </noscript>
+            <noscript data-url="http://localhost/__data/assets/image/0001/0001/image5.jpg" data-alt="image 5 alt">
+                <img src="http://localhost/image5.jpg" />
+            </noscript>
+            
+            <img src="http://localhost/image1.png" alt="one" class="responsive" />
+            <img src="http://localhost/image2.jpg" alt="two" class="responsive" />
+            <img src="http://localhost/image3.gif" alt="three" class="responsive" />
+        </div>
+        <div id="other-images">
+            <noscript data-url="http://localhost/image4.jpg" data-alt="image 4 alt">
+                <img src="http://localhost/image4.jpg" />
+            </noscript>
+        </div>
+    </div>
+    
+  </body>
+</html>
